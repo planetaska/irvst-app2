@@ -1,24 +1,27 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is an example app of Vite Rails 7 with Svelte integration.
 
-Things you may want to cover:
+[https://way-too-mainstream.vercel.app/articles/creating-first-inertia-rails-app](https://way-too-mainstream.vercel.app/articles/creating-first-inertia-rails-app)
 
 * Ruby version
 
-* System dependencies
+3.1.2
 
 * Configuration
 
+This app was created with the following command:
+
+`rails new irvst-app --skip-javascript --skip-asset-pipeline -d postgresql`
+
 * Database creation
+
+`rails db:create`
 
 * Database initialization
 
+`rails db:migrate`
+
 * How to run the test suite
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+`rails test`
