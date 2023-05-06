@@ -1,7 +1,8 @@
 <script>
   import New from './New.svelte'
-  import { inertia, Link } from '@inertiajs/svelte'
+  import { inertia, page, Link } from '@inertiajs/svelte'
 
+  let admin = $page.props.auth
   let show = false
 
   function toggleShow() {
@@ -13,10 +14,11 @@
 
 <h1 className="font-bold text-2xl mb-6">All Articles</h1>
 
-<button on:click={ toggleShow } >New Article</button>
-
-{#if show}
-  <New/>
+{#if admin}
+  <button on:click={toggleShow} >New Article</button>
+  {#if show}
+    <New/>
+  {/if}
 {/if}
 
 <div className="mt-6">
