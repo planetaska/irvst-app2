@@ -1,8 +1,12 @@
 class ArticlesController < ApplicationController
-  include Auth
+  # include Auth
+  # skip_before_action :authenticate_user!, only: %i[ index show ]
 
-  before_action :set_article, only: %i[ show edit update destroy ]
-  skip_before_action :authenticate_user!, only: %i[ index show ]
+  # notice we also removed show action from set_article before action
+  # this is because we want to allow visitors not logged in to be able to view the show page
+  before_action :set_article, only: %i[ edit update destroy ]
+
+  after_action :verify_authorized, except: %i[ index show ]
 
   # GET /articles or /articles.json
   def index
@@ -17,6 +21,9 @@ class ArticlesController < ApplicationController
 
   # GET /articles/1 or /articles/1.json
   def show
+    # because we removed set_article before action for show, we will add it back here
+    @article = Article.find(params[:id])
+
     render inertia: 'Articles/Show', props: {
       article: @article.as_json(
         only: [:id, :title, :body]
@@ -41,6 +48,8 @@ class ArticlesController < ApplicationController
   # POST /articles or /articles.json
   def create
     article = Article.new(article_params)
+    # we don't run set_article for create, so we need to authorize the resource here
+    authorize article
 
     if article.save
       redirect_to articles_path, notice: 'Article created.'
@@ -71,6 +80,12 @@ class ArticlesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_article
       @article = Article.find(params[:id])
+
+      # we authorize the resource here so all actions that depends on set_article can use it as authorized
+      authorize @article
+
+      rescue ActiveRecord::RecordNotFound
+        redirect_to articles_path
     end
 
     # Only allow a list of trusted parameters through.
